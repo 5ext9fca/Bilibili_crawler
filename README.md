@@ -251,6 +251,7 @@ python bv2oid.py
 - 新增批量爬取功能
 - 新增数据可视化分析
 - 新增 WBI 签名支持
+- 优化代码结构和异常处理
 
 ---
 
@@ -268,4 +269,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**最后更新时间**：2025 年 10 月 6 日  
+**最后更新时间**：2025 年 11 月 8 日  

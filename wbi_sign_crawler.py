@@ -10,8 +10,9 @@ from utils.file_utils import setup_logger
 
 logger = setup_logger(__name__)
 
-def get_mixin_key(orig: str) -> str:
-    '对 imgKey 和 subKey 进行字符顺序打乱编码'
+
+def _get_mixin_key(orig: str) -> str:
+    """对 imgKey 和 subKey 进行字符顺序打乱编码"""
     MIXIN_ENC_KEY_TAB = [
         46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49,
         33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41, 13, 37, 48, 7, 16, 24, 55, 40,
@@ -21,33 +22,36 @@ def get_mixin_key(orig: str) -> str:
     return reduce(lambda s, i: s + orig[i], MIXIN_ENC_KEY_TAB, '')[:32]
 
 
+def _filter_param_values(params: dict) -> dict:
+    """过滤 value 中的 "!'()*" 字符"""
+    return {
+        k: ''.join(filter(lambda char: char not in "!'()*", str(v)))
+        for k, v
+        in params.items()
+    }
+
+
+def _get_w_rid(mixin_key: str, params: dict) -> str:
+    query = urllib.parse.urlencode(params)  # 序列化参数
+    wbi_sign = md5((query + mixin_key).encode()).hexdigest()  # 计算 w_rid
+    return wbi_sign
+
+
 def enc_wbi(params: dict, img_key: str, sub_key: str):
-    '为请求参数进行 wbi 签名'
-    def filter_param_values(params: dict) -> dict:
-        """过滤 value 中的 "!'()*" 字符"""
-        return {
-            k: ''.join(filter(lambda chr: chr not in "!'()*", str(v)))
-            for k, v
-            in params.items()
-        }
-
-    def get_w_rid(mixin_key: str, params: dict) -> str:
-        query = urllib.parse.urlencode(params)  # 序列化参数
-        wbi_sign = md5((query + mixin_key).encode()).hexdigest()  # 计算 w_rid
-        return wbi_sign
-
+    """为请求参数进行 wbi 签名"""
 
     params['wts'] = round(time.time())  # 添加 wts (curr_time) 字段
     params = dict(sorted(params.items()))  # 按照 key 重排参数
-    params = filter_param_values(params)
+    params = _filter_param_values(params)
 
-    mixin_key = get_mixin_key(img_key + sub_key)
-    params['w_rid'] = get_w_rid(mixin_key, params)
+    mixin_key = _get_mixin_key(img_key + sub_key)
+    params['w_rid'] = _get_w_rid(mixin_key, params)
 
     return params
 
+
 def get_wbi_keys() -> tuple[str, str]:
-    '获取最新的 img_key 和 sub_key'
+    """获取最新的 img_key 和 sub_key"""
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
         'Referer': 'https://www.bilibili.com/'
@@ -64,48 +68,44 @@ def get_wbi_keys() -> tuple[str, str]:
 
 
 def main():
-
     img_key, sub_key = get_wbi_keys()
-    params = {
-            'oid': 1504733402,
-            'type': 1,
-            'mode': 3,
-            'plat': 1,
-            'next': 0,
-        }
-    signed_params = enc_wbi(
-        params=params,
-        img_key=img_key,
-        sub_key=sub_key
-    )
-    query = urllib.parse.urlencode(signed_params)
-    logger.info(signed_params)
-    logger.info(query)
-    parsed_query = urllib.parse.parse_qs(query)
-    wts = parsed_query.get('wts', [None])[0]
-    w_rid = parsed_query.get('w_rid', [None])[0]
-
-    # 请求头
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-        'Referer': 'https://www.bilibili.com/',
+    context = {
+        'params': {
+            'oid': '1504733402',
+            'type': '1',
+            'mode': '3',
+            'plat': '1',
+            'next': '0',
+        },
+        'headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+            'Referer': 'https://www.bilibili.com/',
+        },
+        'img_key': img_key,
+        'sub_key': sub_key,
+        'url': 'https://api.bilibili.com/x/v2/reply/wbi/main?',
     }
 
-    # 初始化Session和重试策略
+
     session = requests.Session()
     retries = Retry(total=3, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
     session.mount('https://', HTTPAdapter(max_retries=retries))
 
-    # 新的数据
-    params = signed_params.update({
-        'w_rid': w_rid,
-        'wts': wts
+    context['params'] = enc_wbi(**context)
+    logger.info(context['params'])
+
+    query = urllib.parse.urlencode(context['params'])
+    logger.info(query)
+
+    parsed_query = urllib.parse.parse_qs(query)
+    context['params'].update({
+        'wts': parsed_query.get('wts', [None])[0],
+        'w_rid': parsed_query.get('w_rid', [None])[0],
     })
-    # 发送请求
-    url = 'https://api.bilibili.com/x/v2/reply/wbi/main?'
-    response = requests.get(url, params=params, headers=headers)
-    logger.info(response.url)  # 打印请求的URL
-    logger.info(response.json())  # 打印响应的JSON内容
+
+    response = requests.get(context['url'], params=context['params'], headers=(context['headers']))
+    logger.info(response.url)
+    logger.info(response.json())
 
 
 if __name__ == '__main__':
