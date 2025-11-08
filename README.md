@@ -152,7 +152,7 @@ pip install -r requirements.txt
 
 2. **运行脚本**
    ```bash
-   python simple_bili_crawler.py
+   python simple_crawler.py
    ```
 
 **type 参数说明**：
@@ -169,7 +169,7 @@ pip install -r requirements.txt
 
 2. **运行脚本**
    ```bash
-   python b站使用wbi签名的爬取方式.py
+   python wbi_sign_crawler.py
    ```
 
 ---
@@ -256,7 +256,7 @@ python bv2oid.py
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 

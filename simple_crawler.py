@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+__name__#!/usr/bin/env python3
 """
 重构后的单个目标爬虫
 支持从config.json读取单个目标配置
@@ -46,25 +46,22 @@ def main():
                 logger.info('  "down": 1,  // 起始页码')
                 logger.info('  "up": 100  // 结束页码')
                 return False
-        
+
         # 解析配置
-        oid = str(simple_config['oid'])
-        comment_type = CommentType(int(simple_config['type']))
-        start_page = simple_config.get('down', 1)
-        end_page = simple_config.get('up', 100)
-        
-        logger.info(f"目标配置: OID={oid}, 类型={comment_type.name}, 页码范围={start_page}-{end_page}")
+        config = {
+            'oid': str(simple_config['oid']),
+            'comment_type': CommentType(int(simple_config['type'])),
+            'start_page': simple_config.get('down', 1),
+            'end_page': simple_config.get('up', 100),
+        }
+
+        logger.info(f"目标配置: OID={config['oid']}, 类型={config['comment_type.name']}, 页码范围={config['start_page']}-{config['end_page']}")
         
         # 创建爬虫实例
         crawler = BilibiliCrawler(config_manager)
         
         # 执行爬取
-        success = crawler.crawl_single_target(
-            oid=oid,
-            comment_type=comment_type,
-            start_page=start_page,
-            end_page=end_page
-        )
+        success = crawler.crawl_single_target(**config)
         
         if success:
             logger.info("单个目标爬取完成")

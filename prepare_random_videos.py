@@ -92,7 +92,7 @@ def main():
     print("示例（前3个）：")
     for it in chosen[:3]:
         print(f"  aid={it['aid']}  bvid={it['bvid']}  title={it['title']}")
-    print("接下来可运行: python Bilibili_crawler_refactored.py 进行批量爬取")
+    print("接下来可运行: python Bilibili_crawler.py 进行批量爬取")
 
 
 if __name__ == "__main__":

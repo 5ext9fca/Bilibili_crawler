@@ -81,7 +81,7 @@ pip install -r requirements.txt
 
 #### 1. 批量爬取评论
 ```bash
-python Bilibili_crawler_refactored.py
+python Bilibili_crawler.py
 ```
 - 读取 `user/` 目录下的CSV任务文件
 - 批量爬取所有任务的评论
@@ -89,7 +89,7 @@ python Bilibili_crawler_refactored.py
 
 #### 2. 单个目标爬取
 ```bash
-python simple_bili_crawler_refactored.py
+python simple_crawler.py
 ```
 需要在 `config.json` 中配置：
 ```json
@@ -103,7 +103,7 @@ python simple_bili_crawler_refactored.py
 
 #### 3. 用户空间动态获取
 ```bash
-python bili_user_space_refactored.py
+python bili_user_space.py
 ```
 - 交互式输入用户UID
 - 获取该用户所有动态列表
@@ -111,7 +111,7 @@ python bili_user_space_refactored.py
 
 #### 4. 数据分析
 ```bash
-python common_func_refactored.py
+python common_func.py
 ```
 - 支持多种分析类型
 - 结果保存到 `analysis_output/` 目录
@@ -119,7 +119,7 @@ python common_func_refactored.py
 
 #### 5. BV/AV号转换
 ```bash
-python bv2oid_refactored.py
+python bv2oid.py
 ```
 - 支持单个转换和批量转换
 - 支持双向转换（AV↔BV）
