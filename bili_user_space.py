@@ -8,10 +8,10 @@ import os
 # 添加项目根目录到Python路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core.api_client import BilibiliApiClient
-from core.config_manager import ConfigManager
-from models.data_models import UserSpaceItem, CommentType
-from utils.file_utils import setup_logger, write_csv, ensure_directory_exists
+from lib.core.api_client import BilibiliApiClient
+from lib.core.config_manager import ConfigManager
+from lib.models.data_models import UserSpaceItem, CommentType
+from lib.utils.file_utils import setup_logger, write_csv, ensure_directory_exists
 
 logger = setup_logger(__name__)
 
@@ -48,7 +48,7 @@ class UserSpaceCrawler:
             logger.info(f"开始爬取用户动态: {mid}")
             
             # 输出文件路径
-            output_file = f"user/{mid}.csv"
+            output_file = f"data/user/{mid}.csv"
             
             # 初始化CSV文件
             write_csv(output_file, [], self.CSV_HEADERS, mode='w')

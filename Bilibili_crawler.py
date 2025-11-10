@@ -9,9 +9,9 @@ import os
 # 添加项目根目录到Python路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core.crawler import BilibiliCrawler
-from core.config_manager import ConfigManager
-from utils.file_utils import setup_logger
+from lib.core.crawler import BilibiliCrawler
+from lib.core.config_manager import ConfigManager
+from lib.utils.file_utils import setup_logger
 
 logger = setup_logger(__name__)
 

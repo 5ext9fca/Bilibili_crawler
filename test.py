@@ -9,12 +9,11 @@ import os
 # 添加项目根目录到Python路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from core.config_manager import ConfigManager
-from core.api_client import BilibiliApiClient
-from utils.video_utils import av2bv, bv2av, validate_bv_format, validate_av_format
-from utils.time_utils import timestamp_to_beijing_time, get_current_beijing_time
-from utils.file_utils import setup_logger
-from models.data_models import CommentType, CrawlConfig
+from lib.core.config_manager import ConfigManager
+from lib.utils.video_utils import av2bv, bv2av, validate_bv_format, validate_av_format
+from lib.utils.time_utils import timestamp_to_beijing_time, get_current_beijing_time
+from lib.utils.file_utils import setup_logger
+from lib.models.data_models import CommentType, CrawlConfig
 
 logger = setup_logger(__name__)
 

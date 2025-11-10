@@ -85,7 +85,7 @@ def main():
     else:
         chosen = random.sample(pool, n)
 
-    out_path = args.out or os.path.join("user", f"random_{len(chosen)}.csv")
+    out_path = args.out or os.path.join("data/user", f"random_{len(chosen)}.csv")
     write_user_csv(chosen, out_path)
 
     print("已生成批量清单:", out_path)

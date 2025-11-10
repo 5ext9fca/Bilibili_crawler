@@ -9,8 +9,8 @@ import os
 # 添加项目根目录到Python路径
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from utils.video_utils import av2bv, bv2av, validate_av_format, validate_bv_format
-from utils.file_utils import setup_logger
+from lib.utils.video_utils import av2bv, bv2av, validate_av_format, validate_bv_format
+from lib.utils.file_utils import setup_logger
 
 logger = setup_logger(__name__)
 
