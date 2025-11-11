@@ -1,12 +1,14 @@
-from functools import reduce
-from hashlib import md5
 import time
 import urllib.parse
+from functools import reduce
+from hashlib import md5
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from lib.utils.network_utils import get_json
+
 from lib.utils.file_utils import setup_logger
+from lib.utils.network_utils import get_json
 
 logger = setup_logger(__name__)
 

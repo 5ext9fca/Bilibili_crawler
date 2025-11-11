@@ -4,18 +4,18 @@
 默认随机选择10个（可通过命令行参数 --count 调整）
 无需登录配置，使用公开热门接口。
 """
-import os
-import sys
-import csv
-import time
-import random
 import argparse
+import csv
+import os
+import random
+import sys
+import time
 from typing import List, Dict
 
 import requests
 
 POPULAR_API = "https://api.bilibili.com/x/web-interface/popular"
-DEFAULT_PAGES = 6   # 每页最多20条，抓取6页≈120条做候选池
+DEFAULT_PAGES = 6  # 每页最多20条，抓取6页≈120条做候选池
 PAGE_SIZE = 20
 
 HEADERS = {
@@ -60,7 +60,7 @@ def write_user_csv(rows: List[Dict], out_path: str):
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         # 与批量爬虫约定的表头：comment_id_str, comment_type
-        w.writerow(["comment_id_str", "comment_type"]) 
+        w.writerow(["comment_id_str", "comment_type"])
         for it in rows:
             # 批量爬虫对视频需要AV号（aid）+ type=1
             w.writerow([str(it["aid"]), 1])

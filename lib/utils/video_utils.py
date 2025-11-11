@@ -28,14 +28,14 @@ def av2bv(aid: int) -> str:
     """
     if not isinstance(aid, int) or aid <= 0:
         raise ValueError("AV号必须是正整数")
-        
+
     bvid = [""] * 9
     tmp = (MAX_AID | aid) ^ XOR_CODE
-    
+
     for i in range(CODE_LEN):
         bvid[ENCODE_MAP[i]] = ALPHABET[tmp % BASE]
         tmp //= BASE
-        
+
     return PREFIX + "".join(bvid)
 
 
@@ -51,18 +51,18 @@ def bv2av(bvid: str) -> int:
     """
     if not isinstance(bvid, str) or not bvid.startswith(PREFIX):
         raise ValueError("BV号格式不正确")
-        
+
     bvid = bvid[len(PREFIX):]
     if len(bvid) != 9:
         raise ValueError("BV号长度不正确")
-        
+
     tmp = 0
     for i in range(CODE_LEN):
         if bvid[DECODE_MAP[i]] not in ALPHABET:
             raise ValueError("BV号包含无效字符")
         idx = ALPHABET.index(bvid[DECODE_MAP[i]])
         tmp = tmp * BASE + idx
-        
+
     return (tmp & MASK_CODE) ^ XOR_CODE
 
 
@@ -78,17 +78,17 @@ def clean_filename(filename: str) -> str:
     """
     if not isinstance(filename, str):
         return str(filename)
-        
+
     # 替换Windows文件名非法字符
     illegal_chars = r'[\\/:*?"<>|]'
     cleaned = re.sub(illegal_chars, '_', filename)
-    
+
     # 替换换行符
     cleaned = re.sub(r'\r|\n', '_', cleaned)
-    
+
     # 去除首尾空格并限制长度
     cleaned = cleaned.strip()[:200]
-    
+
     return cleaned if cleaned else "unnamed_file"
 
 
@@ -104,13 +104,13 @@ def validate_bv_format(bvid: str) -> bool:
     """
     if not isinstance(bvid, str):
         return False
-        
+
     if not bvid.startswith(PREFIX):
         return False
-        
+
     if len(bvid) != len(PREFIX) + 9:
         return False
-        
+
     body = bvid[len(PREFIX):]
     return all(c in ALPHABET for c in body)
 

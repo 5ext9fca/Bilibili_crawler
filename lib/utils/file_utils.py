@@ -3,9 +3,10 @@
 """
 import csv
 import json
-import os
-from typing import List, Dict, Any, Optional
 import logging
+import os
+import sys
+from typing import List, Dict, Any, Optional
 
 
 def setup_logger(name: str, log_file: str = 'crawler.log') -> logging.Logger:
@@ -21,7 +22,7 @@ def setup_logger(name: str, log_file: str = 'crawler.log') -> logging.Logger:
     """
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    
+
     # 避免重复添加处理器
     if logger.handlers:
         return logger
@@ -45,7 +46,7 @@ def _add_handler(handler: logging.Handler, formatter: logging.Formatter, logger:
     logger.addHandler(handler)
 
 
-def write_csv(file_path: str, data: List[List[Any]], headers: Optional[List[str]] = None, 
+def write_csv(file_path: str, data: List[List[Any]], headers: Optional[List[str]] = None,
               mode: str = 'w', encoding: str = 'utf-8-sig') -> bool:
     """
     写入CSV文件
@@ -65,15 +66,15 @@ def write_csv(file_path: str, data: List[List[Any]], headers: Optional[List[str]
 
         with open(file_path, mode=mode, newline='', encoding=encoding) as file:
             writer = csv.writer(file)
-            
+
             # 写入表头（仅在写入模式下）
             if headers and mode == 'w':
                 writer.writerow(headers)
-            
+
             # 写入数据
             if data:
                 writer.writerows(data)
-        
+
         return True
     except Exception as e:
         logging.error(f"写入CSV文件失败: {file_path}, 错误: {e}")
@@ -172,12 +173,12 @@ def get_files_in_directory(directory: str, extension: str = '.csv') -> List[str]
     try:
         if not os.path.exists(directory):
             return []
-        
+
         files = []
         for filename in os.listdir(directory):
             if filename.endswith(extension):
                 files.append(os.path.join(directory, filename))
-        
+
         return files
     except Exception as e:
         logging.error(f"读取目录文件失败: {directory}, 错误: {e}")
@@ -201,10 +202,15 @@ def append_to_file(file_path: str, content: str, encoding: str = 'utf-8') -> boo
         directory = os.path.dirname(file_path)
         if directory and not os.path.exists(directory):
             os.makedirs(directory, exist_ok=True)
-        
+
         with open(file_path, 'a', encoding=encoding) as f:
             f.write(content)
         return True
     except Exception as e:
         logging.error(f"追加文件内容失败: {file_path}, 错误: {e}")
         return False
+
+
+def add_dir_to_path(file):
+    """添加文件所在目录到Python路径"""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(file)))

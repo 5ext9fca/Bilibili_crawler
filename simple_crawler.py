@@ -1,18 +1,16 @@
-__name__#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 重构后的单个目标爬虫
 支持从config.json读取单个目标配置
 """
 import sys
-import os
 
-# 添加项目根目录到Python路径
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from lib.core.crawler import BilibiliCrawler
 from lib.core.config_manager import ConfigManager
+from lib.core.crawler import BilibiliCrawler
 from lib.models.data_models import CommentType
-from lib.utils.file_utils import setup_logger
+from lib.utils.file_utils import setup_logger, add_dir_to_path
+
+add_dir_to_path(__file__)
 
 logger = setup_logger(__name__)
 
@@ -23,18 +21,18 @@ def main():
         logger.info("=" * 50)
         logger.info("Bilibili单个目标评论爬虫启动")
         logger.info("=" * 50)
-        
+
         # 初始化配置管理器
         config_manager = ConfigManager()
-        
+
         # 加载配置
         if not config_manager.load_config():
             logger.error("配置加载失败，程序退出")
             return False
-        
+
         # 获取单个目标配置
         simple_config = config_manager.get_simple_config()
-        
+
         # 验证必需配置
         required_keys = ['oid', 'type']
         for key in required_keys:
@@ -55,21 +53,22 @@ def main():
             'end_page': simple_config.get('up', 100),
         }
 
-        logger.info(f"目标配置: OID={config['oid']}, 类型={config['comment_type.name']}, 页码范围={config['start_page']}-{config['end_page']}")
-        
+        logger.info(
+            f"目标配置: OID={config['oid']}, 类型={config['comment_type.name']}, 页码范围={config['start_page']}-{config['end_page']}")
+
         # 创建爬虫实例
         crawler = BilibiliCrawler(config_manager)
-        
+
         # 执行爬取
         success = crawler.crawl_single_target(**config)
-        
+
         if success:
             logger.info("单个目标爬取完成")
             return True
         else:
             logger.error("单个目标爬取失败")
             return False
-            
+
     except KeyboardInterrupt:
         logger.info("用户中断程序")
         return False

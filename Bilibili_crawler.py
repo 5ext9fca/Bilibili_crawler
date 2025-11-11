@@ -4,14 +4,12 @@
 使用面向对象设计，提升可读性和可维护性
 """
 import sys
-import os
 
-# 添加项目根目录到Python路径
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
-from lib.core.crawler import BilibiliCrawler
 from lib.core.config_manager import ConfigManager
-from lib.utils.file_utils import setup_logger
+from lib.core.crawler import BilibiliCrawler
+from lib.utils.file_utils import setup_logger, add_dir_to_path
+
+add_dir_to_path(__file__)
 
 logger = setup_logger(__name__)
 
@@ -22,28 +20,28 @@ def main():
         logger.info("=" * 50)
         logger.info("Bilibili批量评论爬虫启动")
         logger.info("=" * 50)
-        
+
         # 初始化配置管理器
         config_manager = ConfigManager()
-        
+
         # 加载配置
         if not config_manager.load_config():
             logger.error("配置加载失败，程序退出")
             return False
-        
+
         # 创建爬虫实例
         crawler = BilibiliCrawler(config_manager)
-        
+
         # 执行批量爬取
         success = crawler.crawl_batch_targets()
-        
+
         if success:
             logger.info("批量爬取任务全部完成")
             return True
         else:
             logger.warning("部分批量爬取任务失败")
             return False
-            
+
     except KeyboardInterrupt:
         logger.info("用户中断程序")
         return False

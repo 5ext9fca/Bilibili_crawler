@@ -2,8 +2,9 @@
 时间处理工具函数
 """
 import datetime
-import pytz
 from typing import Optional
+
+import pytz
 
 
 def timestamp_to_beijing_time(timestamp: int, format_str: str = '%Y-%m-%d %H:%M:%S') -> str:
@@ -20,11 +21,11 @@ def timestamp_to_beijing_time(timestamp: int, format_str: str = '%Y-%m-%d %H:%M:
     try:
         # 转换为UTC时间
         dt_object = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc)
-        
+
         # 转换为北京时间
         beijing_tz = pytz.timezone('Asia/Shanghai')
         beijing_time = dt_object.astimezone(beijing_tz)
-        
+
         return beijing_time.strftime(format_str)
     except (ValueError, OSError) as e:
         return f"时间转换错误: {e}"
@@ -59,7 +60,7 @@ def validate_timestamp(timestamp: int) -> bool:
         # 检查时间戳范围（1970年到2050年）
         min_timestamp = 0
         max_timestamp = 2524608000  # 2050年
-        
+
         return min_timestamp <= timestamp <= max_timestamp
     except (TypeError, ValueError):
         return False
@@ -82,16 +83,16 @@ def parse_time_string(time_str: str) -> Optional[datetime.datetime]:
         '%Y/%m/%d %H:%M:%S',
         '%Y-%m-%d',
     ]
-    
+
     # 清理时间字符串
     cleaned_time = time_str.strip()
     if ' 北京时间' in cleaned_time:
         cleaned_time = cleaned_time.replace(' 北京时间', '')
-    
+
     for fmt in formats:
         try:
             return datetime.datetime.strptime(cleaned_time, fmt)
         except ValueError:
             continue
-    
+
     return None
