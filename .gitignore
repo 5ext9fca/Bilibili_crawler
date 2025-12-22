@@ -1,9 +1,14 @@
-# Virtual Environment
-.venv/
-venv/
-# IDE Settings (for JetBrains IDEs like PyCharm)
-.idea/
-# Compiled Python files
+# Python-generated files
 __pycache__/
-*.pyc
-# Other common ignores...
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# IDE files
+.vscode/
+.idea/
