@@ -26,10 +26,33 @@
 
 ## 🚀 快速开始
 
+> 注意：本仓库已迁移到 `uv` 进行依赖管理，且仓库内所有文件统一使用 LF（Unix）行尾。Windows 用户请参阅下面的说明以避免行尾问题。
+
+### 关于行尾（LF）与 Windows
+
+- 本项目的所有源文件和文档均使用 LF（\n）行尾。建议在克隆后保持仓库默认行尾以避免不必要的差异。
+- 如果你在 Windows 上使用 Git，请考虑运行：
+
+```powershell
+# 推荐（保留仓库中的 LF，不自动转换为 CRLF）
+git config --global core.autocrlf false
+git config --global core.eol lf
+```
+
+- 如果已经有文件使用了 CRLF，可以使用 PowerShell 将它们统一为 LF（在仓库根目录运行）：
+
+```powershell
+Get-ChildItem -Recurse -File -Include *.py,*.md,*.txt,*.json | ForEach-Object {
+  (Get-Content $_.FullName -Raw) -replace "`r`n", "`n" | Set-Content -NoNewline -Encoding UTF8 $_.FullName
+}
+```
+
+- 常见替代方案是使用编辑器（如 VS Code）提供的 "Convert Line Endings" 功能来批量转换。
+
 ### 1️⃣ 安装依赖
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 **依赖包列表**：

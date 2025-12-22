@@ -68,8 +68,31 @@ Bilibili_crawler-main/
 1. 安装依赖：
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
+
+> 注意：本仓库已迁移到 `uv` 进行依赖管理，且仓库内所有文件统一使用 LF（Unix）行尾。Windows 用户请参阅下面的说明以避免行尾问题。
+
+**关于行尾（LF）与 Windows**
+
+- 本项目的所有源文件和文档均使用 LF（\n）行尾，仓库中已提交 `uv.lock` 以锁定依赖版本。
+- 在 Windows 上使用 Git 时，建议保留仓库中的 LF，不自动转换为 CRLF：
+
+```powershell
+# 推荐（保留仓库中的 LF，不自动转换为 CRLF）
+git config --global core.autocrlf false
+git config --global core.eol lf
+```
+
+- 若需将现有 CRLF 文件转换为 LF，可在 PowerShell （仓库根目录）运行：
+
+```powershell
+Get-ChildItem -Recurse -File -Include *.py,*.md,*.txt,*.json | ForEach-Object {
+  (Get-Content $_.FullName -Raw) -replace "`r`n", "`n" | Set-Content -NoNewline -Encoding UTF8 $_.FullName
+}
+```
+
+- 另可使用编辑器（如 VS Code）的 "Convert Line Endings" 功能批量转换。
 
 2. 配置文件：编辑 `config.json`
 
