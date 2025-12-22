@@ -6,7 +6,7 @@
 import os
 
 from lib.utils.file_utils import setup_logger, add_dir_to_path
-from lib.utils.video_utils import av2bv, bv2av, validate_av_format, validate_bv_format
+from lib.utils.platform_utils import av2bv, bv2av, validate_av_format, validate_bv_format
 
 add_dir_to_path(__file__)
 

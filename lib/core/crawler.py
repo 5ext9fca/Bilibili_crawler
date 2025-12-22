@@ -9,7 +9,7 @@ from lib.core.config_manager import ConfigManager
 from lib.models.data_models import CrawlTask, CommentData, CommentType
 from lib.utils.file_utils import setup_logger, write_csv, ensure_directory_exists, get_files_in_directory, read_csv
 from lib.utils.time_utils import timestamp_to_beijing_time
-from lib.utils.video_utils import av2bv, clean_filename
+from lib.utils.platform_utils import av2bv, clean_filename
 
 logger = setup_logger(__name__)
 
