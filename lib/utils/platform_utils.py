@@ -2,7 +2,9 @@
 视频相关工具函数
 包含BV/AV号转换等功能
 """
+import hashlib
 import re
+from urllib.parse import parse_qsl
 
 # BV/AV号转换常量
 XOR_CODE = 23442827791579
@@ -130,3 +132,14 @@ def validate_av_format(aid: str) -> bool:
         return aid_int > 0
     except (ValueError, TypeError):
         return False
+
+
+def extract_bili_jct(cookie_str: str) -> str:
+    normalized = cookie_str.replace(";", "&")
+    pairs = dict(parse_qsl(normalized, keep_blank_values=True))
+    return pairs.get("bili_jct", "")
+
+
+def get_sign(params: str) -> str:
+    secret = "59b43e04ad6965f34319062b478f83dd"
+    return hashlib.md5((params + secret).encode("utf-8")).hexdigest()

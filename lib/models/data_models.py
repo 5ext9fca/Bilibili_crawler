@@ -2,22 +2,22 @@
 数据模型定义
 """
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, auto
 from typing import Optional, List, Dict, Any
 
 
 class CommentType(Enum):
     """评论类型枚举"""
     VIDEO = 1  # 视频评论
-    DYNAMIC_IMAGE = 11  # 图文动态评论  
+    DYNAMIC_IMAGE = 11  # 图文动态评论
     DYNAMIC_TEXT = 17  # 文字/转发动态评论
 
 
 class Gender(Enum):
     """性别枚举"""
-    MALE = "男"
-    FEMALE = "女"
-    UNKNOWN = "保密"
+    MALE = auto()
+    FEMALE = auto()
+    UNKNOWN = auto()
 
 
 @dataclass

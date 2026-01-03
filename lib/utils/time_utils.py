@@ -2,6 +2,7 @@
 时间处理工具函数
 """
 import datetime
+import time
 from typing import Optional
 
 import pytz
@@ -96,3 +97,7 @@ def parse_time_string(time_str: str) -> Optional[datetime.datetime]:
             continue
 
     return None
+
+
+def get_timestamp(as_seconds: bool = False) -> str:
+    return str(int(time.time())) if as_seconds else str(int(time.time() * 1000))

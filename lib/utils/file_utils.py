@@ -6,7 +6,10 @@ import json
 import logging
 import os
 import sys
+from pathlib import Path
 from typing import List, Dict, Any, Optional
+
+from lib.utils.login_utils import CONFIG_PATH
 
 
 def setup_logger(name: str, log_file: str = 'crawler.log') -> logging.Logger:
@@ -214,3 +217,9 @@ def append_to_file(file_path: str, content: str, encoding: str = 'utf-8') -> boo
 def add_dir_to_path(file):
     """添加文件所在目录到Python路径"""
     sys.path.insert(0, os.path.dirname(os.path.abspath(file)))
+
+
+def merge_config(cookies_str: str, bili_jct: str, config_path: Path = CONFIG_PATH) -> bool:
+    config = load_json_config(str(config_path)) or {}
+    config.update({"cookies_str": cookies_str, "bili_jct": bili_jct})
+    return save_json_config(str(config_path), config)
